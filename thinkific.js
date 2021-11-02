@@ -1,8 +1,7 @@
-// const args = process.argv.slice(2);
 const fs = require('fs');
 const Papa = require('papaparse');
+const csvFilePath = process.argv.slice(2)[0];
 
-const csvFilePath = 'tht-coop.csv'
 //Helper functions
 function uniformString(str) {
  str = str.split(' ').join('').toLowerCase().substring(0,16);
