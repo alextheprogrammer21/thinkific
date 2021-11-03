@@ -1,43 +1,7 @@
-const fs = require('fs');
-const Papa = require('papaparse');
+const { uniformString, compare, formatter, readCSV,writeCSV  } = require('./helpers');
 const csvFilePath = process.argv.slice(2)[0];
 
-//Helper functions
-function uniformString(str) {
- str = str.split(' ').join('').toLowerCase().substring(0,16);
- return str;
-}
-function compare(a,b) {
- return (a.Vendor < b.Vendor ? -1 : 1)
-}
-function formatter(category) {
- let str = ' '
- let spacing = 30 - category.length; 
- for (let i = 0; i < spacing; i++) {
-  str += ' '
- }
- return str;
-}
-//Reads csv data passed in through command line
-const readCSV = async (filePath) => {
-  const csvFile = fs.readFileSync(filePath)
-  const csvData = csvFile.toString()  
-  return new Promise(resolve => {
-    Papa.parse(csvData, {
-      header: true,
-      complete: results => {
-        resolve(results.data);
-      }
-    });
-  });
-};
-//Exports data to a csv file
-const writeCSV = async (data) => {
- var csv = Papa.unparse(data);
- fs.writeFileSync("Exported.csv", csv);
-}
-
-const exportData = async () => {
+const runScript = async () => {
   let parsedData = await readCSV(csvFilePath); 
 
 //Fills in the categories and subcategories for all entries. Runtime is O(2N)
@@ -86,10 +50,19 @@ for (const key in reportObj) {
 }
 }
 
+function exportData() {
+
+}
+
+function generateReport() {
+
+}
+
+
 if (!process.argv.slice(2)[1]) {
- console.log(`Hello. You can run me by typing 'node thinkific.js filePath option'
-Options are: 1 for exporting a csv file, 2 for generating a report in the cmd
-Ex: node thinkific.js tht-coop.csv 1`)
+ console.log(`Hello. You can run me by typing "node thinkific.js 𝘧𝘪𝘭𝘦𝘱𝘢𝘵𝘩 𝘰𝘱𝘵𝘪𝘰𝘯"
+Options are: 1 for exporting a csv file, 2 for generating a report in the command line
+Example: node thinkific.js tht-coop.csv 1`)
 } else {
-exportData()
+runScript()
 }
