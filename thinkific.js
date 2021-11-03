@@ -10,6 +10,14 @@ function uniformString(str) {
 function compare(a,b) {
  return (a.Vendor < b.Vendor ? -1 : 1)
 }
+function formatter(category) {
+ let str = ' '
+ let spacing = 30 - category.length; 
+ for (let i = 0; i < spacing; i++) {
+  str += ' '
+ }
+ return str;
+}
 //Reads csv data passed in through command line
 const readCSV = async (filePath) => {
   const csvFile = fs.readFileSync(filePath)
@@ -53,7 +61,7 @@ const exportData = async () => {
  parsedData.sort(compare);
 
  //Exporting to a CSV file
-// writeCSV(parsedData);
+writeCSV(parsedData);
 
 
 //Generate the report (Before refactoring everything)
@@ -71,7 +79,11 @@ for (let i = 0; i < parsedData.length; i++) {
   reportObj[category][subcategory] = spend;
  }
 }
-console.log(reportObj)
+for (const key in reportObj) {
+ console.log(key)
+ for (const subkey in reportObj[key])
+  console.log(`  ${subkey}${formatter(subkey)}$${reportObj[key][subkey].toFixed(2)}`);
+}
 }
 
 if (!process.argv.slice(2)[1]) {
