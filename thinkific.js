@@ -29,7 +29,7 @@ const writeCSV = async (data) => {
  fs.writeFileSync("Exported.csv", csv);
 }
 
-const runScript = async () => {
+const exportData = async () => {
   let parsedData = await readCSV(csvFilePath); 
 
 //Fills in the categories and subcategories for all entries. Runtime is O(2N)
@@ -53,11 +53,31 @@ const runScript = async () => {
  parsedData.sort(compare);
 
  //Exporting to a CSV file
-writeCSV(parsedData);
+// writeCSV(parsedData);
 
-//Exports a report
+
+//Generate the report (Before refactoring everything)
+let reportObj = {};
+for (let i = 0; i < parsedData.length; i++) {
+ let data = parsedData[i];
+ let category = data.Category;
+ let subcategory = data.Subcategory;
+ let spend = Math.round(parseFloat(data.Spend) * 100) / 100;
+
+ if (reportObj[category]) {
+  reportObj[category][subcategory] ? reportObj[category][subcategory] += spend : reportObj[category][subcategory] = spend
+ } else {
+  reportObj[category] = {}
+  reportObj[category][subcategory] = spend;
+ }
+}
+console.log(reportObj)
 }
 
-runScript()
-
-
+if (!process.argv.slice(2)[1]) {
+ console.log(`Hello. You can run me by typing 'node thinkific.js filePath option'
+Options are: 1 for exporting a csv file, 2 for generating a report in the cmd
+Ex: node thinkific.js tht-coop.csv 1`)
+} else {
+exportData()
+}
